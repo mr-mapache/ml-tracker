@@ -1,0 +1,22 @@
+[tool.poetry]
+name = "mltracker"
+version = "0.1.0"
+description = ""
+authors = ["mr-raccoon-97 <eric.m.cardozo@mi.unc.edu.ar>"]
+readme = "README.md"
+
+[tool.poetry.dependencies]
+python = "^3.12"
+
+
+[tool.poetry.group.tests.dependencies]
+pytest = "^8.3.3"
+
+
+
+[tool.poetry.group.tinydb.dependencies]
+tinydb = "^4.8.2"
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
