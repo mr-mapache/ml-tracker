@@ -1,7 +1,7 @@
 [tool.poetry]
 name = "mltracker"
-version = "0.1.0"
-description = ""
+version = "0.1.1"
+description = "A simple tool for tracking machine learning aggregates and storing their data."
 authors = ["mr-raccoon-97 <eric.m.cardozo@mi.unc.edu.ar>"]
 readme = "README.md"
 
