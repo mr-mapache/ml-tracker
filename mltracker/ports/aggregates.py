@@ -27,6 +27,9 @@ class Aggregates(ABC):
 
     @abstractmethod    
     def create(self, id: str, modules: list[Module]) -> Aggregate:...
+
+    @abstractmethod
+    def put(self, id: str, epoch: int, modules: list[Module]):...
     
     @abstractmethod    
     def get(self, id: str) -> Optional[Aggregate]:...
