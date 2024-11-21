@@ -13,21 +13,21 @@ class Aggregates(Collection):
         self.database = database
         self.table = self.database.table('aggregates')
         
-    def create(self, id: str, modules: list[Module]) -> Aggregate:
-        if self.table.contains((where('owner') == self.owner) & (where('id') == id)):
+    def create(self, id: Any, modules: list[Module]) -> Aggregate:
+        if self.table.contains((where('owner') == self.owner) & (where('id') == str(id))):
             raise ValueError(f'Aggregate with id {id} already exists')
         
         aggregate = Aggregate(
-            id=id, 
+            id=str(id), 
             epochs=0, 
             modules=modules,
-            metrics=Metrics(id, self.database), 
-            iterations=Iterations(id, self.database)
+            metrics=Metrics(str(id), self.database), 
+            iterations=Iterations(str(id), self.database)
         )
 
         self.table.insert({
             'owner': self.owner,
-            'id': id,
+            'id': str(id),
             'epochs': 0,
             'modules': [asdict(module) for module in modules]
         })
@@ -36,24 +36,24 @@ class Aggregates(Collection):
     def put(self, id: Any, epoch: int, modules: list[Module]):
         self.table.upsert({
             'owner': self.owner,
-            'id': id,
+            'id': str(id),
             'epochs': epoch,
             'modules': [asdict(module) for module in modules]
-        }, (where('owner') == self.owner) & (where('id') == id))
+        }, (where('owner') == self.owner) & (where('id') == str(id)))
     
     def get(self, id: str) -> Optional[Aggregate]:
-        result = self.table.get((where('owner') == self.owner) & (where('id') == id))
+        result = self.table.get((where('owner') == self.owner) & (where('id') == str(id)))
         if result:
             return Aggregate(
                 **{key: value for key, value in result.items() if key != 'owner' and key != 'modules'},
                 modules=[Module(**module) for module in result['modules']],
-                metrics=Metrics(id, self.database), 
-                iterations=Iterations(id, self.database)
+                metrics=Metrics(str(id), self.database), 
+                iterations=Iterations(str(id), self.database)
             )
         return None
     
     def patch(self, id: str, epochs: int):
-        self.table.update({'epochs': epochs}, (where('owner') == self.owner) & (where('id') == id))
+        self.table.update({'epochs': epochs}, (where('owner') == self.owner) & (where('id') == str(id)))
     
     def list(self) -> list[Aggregate]:
         results = self.table.search(where('owner') == self.owner)
@@ -66,4 +66,4 @@ class Aggregates(Collection):
 
     def remove(self, aggregate: Aggregate):
         aggregate.metrics.clear(), aggregate.iterations.clear()
-        self.table.remove((where('owner') == self.owner) & (where('id') == aggregate.id))
+        self.table.remove((where('owner') == self.owner) & (where('id') == str(aggregate.id)))
