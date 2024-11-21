@@ -1,15 +1,16 @@
 from abc import ABC
 from abc import abstractmethod
 from typing import Any
+from typing import Optional
 from dataclasses import dataclass, asdict
 
 @dataclass
 class Metric:
     name: str
     value: Any
-    batch: int
-    epoch: int
-    phase: str
+    batch: Optional[int] = None
+    epoch: Optional[int] = None
+    phase: Optional[str] = None
 
 class Metrics(ABC):
 

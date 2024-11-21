@@ -33,6 +33,14 @@ class Aggregates(Collection):
         })
         return aggregate
     
+    def put(self, id: Any, epoch: int, modules: list[Module]):
+        self.table.upsert({
+            'owner': self.owner,
+            'id': id,
+            'epochs': epoch,
+            'modules': [asdict(module) for module in modules]
+        }, (where('owner') == self.owner) & (where('id') == id))
+    
     def get(self, id: str) -> Optional[Aggregate]:
         result = self.table.get((where('owner') == self.owner) & (where('id') == id))
         if result:
