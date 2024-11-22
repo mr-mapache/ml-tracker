@@ -1,5 +1,10 @@
 ### ML-Tracker
 
+Warning: unlike the torchsystem, pybondi or the mlregistry, this is not in a stable state. I'm using this for my own experiments but i didn't figured out completly how to create a general purpose data storage for all machine learning experiments data, so it may not fit yours.  
+
+#### Introduction
+
+
 In machine learning, a model has no scientific value if it's not reproducible. In order to reproduce a model, a rigorous tracking of the model's data is needed. This not only includes the model's metrics but also it's parameters, the data used to train the model, how data was fed into the model, what criterions or optimizers were used, etc. This is a tedious task that can be automated with the help of a tool that helps you track your machine learning aggregates, their metrics and their parameters. This is what ML-Tracker does.
 
 ML-Tracker is a tool that helps you track your machine learning aggregates, their metrics and their parameters, using the aggregate pattern. It has a TinyDB backend as default that stores the data in a JSON file, but more backends can be added in the future. This is posible thanks to the ports and adapters architecture that decouples the interface of the data access objects from their implementation.
