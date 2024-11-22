@@ -4,5 +4,5 @@ from mltracker.adapters.tinydb.aggregates import Aggregate, Aggregates
 from mltracker.adapters.tinydb.metrics import Metric
 from mltracker.adapters.tinydb.iterations import Iteration
 from mltracker.adapters.tinydb.aggregates import Module
-
+from mltracker.adapters.tinydb.iterations import Dataset
 #TODO: Fix this to support other adapters. For now only tinydb is supported.
