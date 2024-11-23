@@ -18,4 +18,4 @@ def get_experiment(name: str, database_location: str) -> Experiment:
 
 def get_aggregates_collection(experiment_name: str, database_location: str) -> Aggregates:
     experiment = get_experiment(experiment_name, database_location)
-    return Aggregates(experiment.id, database_location)
+    return Aggregates(experiment.id, TinyDB(path.join(database_location, 'database.json')))
