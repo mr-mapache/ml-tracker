@@ -57,7 +57,7 @@ When you retrieve an aggregate, it's metrics are not loaded directly, instead a 
 Let's create an aggregate:
 
 ```python
-from mltracker import get_aggregates_collectio
+from mltracker import get_aggregates_collection
 from mltracker import Module
 
 # Get an instance of the aggregates collection
