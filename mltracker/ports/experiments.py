@@ -1,23 +1,31 @@
+from uuid import UUID 
 from typing import Optional
-from typing import Any
 from abc import ABC, abstractmethod
-from dataclasses import dataclass
+from attrs import define
+from mltracker.ports.models import Models
 
-@dataclass
-class Experiment:
-    id: Optional[Any]
-    name: str
+@define
+class Experiment: 
+    id: UUID
+    name: str 
+    models: Models
 
 class Experiments(ABC):
 
     @abstractmethod
-    def create(self, name: str) -> Experiment: ...
+    def create(self, name: str) -> Experiment:...
 
     @abstractmethod
-    def read(self, name: str) -> Optional[Experiment]: ...
+    def read(self, **kwargs) -> Optional[Experiment]:...
 
     @abstractmethod
-    def delete(self, name: str): ...
+    def update(self, id: str, name: str) -> Experiment:...
 
     @abstractmethod
-    def list(self) -> list[Experiment]: ...
+    def delete(self, id: str) -> None:...
+
+    @abstractmethod
+    def list(self) -> list[Experiment]:...
+
+    @abstractmethod
+    def clear(self) -> None:...

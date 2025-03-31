@@ -1,24 +1,20 @@
-from abc import ABC
-from abc import abstractmethod
-from typing import Any
-from typing import Optional
-from dataclasses import dataclass, asdict
+from abc import ABC, abstractmethod
+from attrs import define
 
-@dataclass
+@define
 class Metric:
     name: str
-    value: Any
-    batch: Optional[int] = None
-    epoch: Optional[int] = None
-    phase: Optional[str] = None
+    value: float
+    phase: str
+    epoch: int
 
 class Metrics(ABC):
 
     @abstractmethod
-    def add(self, metric: Metric): ...
-
-    @abstractmethod
-    def list(self) -> list[Metric]: ...
+    def add(self, metric: Metric):...
     
     @abstractmethod
-    def clear(self): ...
+    def list(self) -> list[Metric]:...
+
+    @abstractmethod
+    def clear(self):...

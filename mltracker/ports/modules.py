@@ -1,17 +1,26 @@
+from abc import ABC, abstractmethod
 from typing import Any
-from dataclasses import dataclass
+from typing import Optional
+from attrs import define 
 
-@dataclass
+@define
 class Module:
     type: str
     hash: str
     name: str
+    epoch: int
     arguments: dict[str, Any]
 
-    def __eq__(self, value: object) -> bool:
-        if not isinstance(value, Module):
-            return False
-        return self.hash == value.hash
+class Modules(ABC): 
+
+    @abstractmethod
+    def list(self, type: str) -> list[Module]:...
+
+    @abstractmethod
+    def last(self, type: str) -> Optional[Module]:...
     
-    def __hash__(self) -> int:
-        return hash(self.hash)
+    @abstractmethod
+    def put(self, module: Module):...
+
+    @abstractmethod
+    def clear(self):...

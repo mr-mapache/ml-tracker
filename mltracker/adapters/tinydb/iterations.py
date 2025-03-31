@@ -1,34 +1,38 @@
-from typing import Any
-from mltracker.ports.iterations import Iterations as Collection
-from mltracker.ports.iterations import Iteration, asdict
-from mltracker.ports.modules import Module
-from mltracker.ports.iterations import Dataset
-from tinydb import TinyDB, where
+from typing import override
 
+from tinydb import TinyDB, where
+from cattrs import unstructure
+from cattrs import structure
+
+from mltracker.ports.owner import Owner
+from mltracker.ports.iterations import Iteration
+from mltracker.ports.iterations import Iterations as Collection
 
 class Iterations(Collection):
-    def __init__(self, owner: Any, database: TinyDB):
-        self.owner = str(owner)
+    def __init__(self, database: TinyDB, owner: Owner):
+        self.owner = owner
         self.database = database
         self.table = self.database.table('iterations')
 
+    @override
+    def add(self, iteration: Iteration):
+        self.table.insert(unstructure(iteration) | {'owner': str(self.owner.id)})
+    
+    @override
     def put(self, iteration: Iteration):
-        self.table.upsert({
-            'owner': self.owner, 
-            'hash': iteration.hash, 
-            'iteration': {key: value for key, value in asdict(iteration).items() if key != 'hash'}
-        }, where('hash') == iteration.hash)
+        iterations = self.table.search(where('owner') == str(self.owner.id) and where('phase') == iteration.phase)
+        if not iterations:
+            self.table.insert(unstructure(iteration) | {'owner': str(self.owner.id)})
+        elif iteration.hash == iterations[-1]['hash']:
+            self.table.update(unstructure(iteration) | {'owner': str(self.owner.id)}, doc_ids=[iterations[-1].doc_id])
+        else:
+            self.table.insert(unstructure(iteration) | {'owner': str(self.owner.id)})
 
+    @override
     def list(self) -> list[Iteration]:
-        results = self.table.search(where('owner') == self.owner)
-        return [Iteration(
-            hash=result['hash'],
-            phase=result['iteration']['phase'],
-            epoch=result['iteration']['epoch'],
-            dataset=Dataset(**result['iteration']['dataset']),
-            arguments=result['iteration']['arguments'],
-            modules=[Module(**module) for module in result['iteration']['modules']],
-        ) for result in results]
-                          
+        iterations = self.table.search(where('owner') == str(self.owner.id))
+        return [structure({key: value for key, value in iteration.items() if key != 'owner'}, Iteration) for iteration in iterations]
+    
+    @override
     def clear(self):
-        self.table.remove(where('owner') == self.owner)
+        self.table.remove(where('owner') == str(self.owner.id))

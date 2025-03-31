@@ -1,0 +1,1 @@
+from cattr import structure as structure 

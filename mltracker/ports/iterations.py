@@ -1,40 +1,24 @@
-from typing import Any
-from datetime import datetime
 from abc import ABC, abstractmethod
-from dataclasses import dataclass, asdict, field
-from mltracker.ports.modules import Module
+from typing import Any
+from attrs import define
 
-@dataclass
-class Dataset:
-    hash: str
-    name: str
-    arguments: dict[str, Any]
-
-@dataclass
+@define
 class Iteration:
     hash: str
     phase: str
     epoch: int
-    dataset: Dataset
     arguments: dict[str, Any]
-    modules: list[Module]
-
-    def __eq__(self, value: object) -> bool:
-        if not isinstance(value, Iteration):
-            return False
-        return self.hash == value.hash
-    
-    def __hash__(self) -> int:
-        return hash(self.hash)
-    
 
 class Iterations(ABC):
+
+    @abstractmethod
+    def add(self, iteration: Iteration):...
     
     @abstractmethod
-    def put(self, iteration: Iteration): ...
+    def put(self, iteration: Iteration):...
 
     @abstractmethod
-    def list(self) -> list[Iteration]: ...
-
+    def list(self) -> list[Iteration]:...
+    
     @abstractmethod
-    def clear(self): ...
+    def clear(self):...
